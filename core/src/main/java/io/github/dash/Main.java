@@ -3,53 +3,91 @@ package io.github.dash;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class Main extends ApplicationAdapter {
 
     private SpriteBatch batch;
     private Texture cubeTexture;
-
     private PlayerCube player;
+    private OrthographicCamera camera;
+    private Rectangle spikeRect;
 
     @Override
-    public void create () {
+    public void create() {
         batch = new SpriteBatch();
 
-        // pour l’instant on réutilise l’image "libgdx.png" comme cube
-        cubeTexture = new Texture("libgdx.png");
+        camera = new OrthographicCamera();
+        camera.setToOrtho(
+            false,
+            Gdx.graphics.getWidth(),
+            Gdx.graphics.getHeight()
+        );
+        camera.position.set(
+            Gdx.graphics.getWidth() / 2f,
+            Gdx.graphics.getHeight() / 2f,
+            0
+        );
+        camera.update();
 
-        // cube de taille 64x64, placé au-dessus du sol
+        cubeTexture = new Texture("libgdx.png"); // tu pourras mettre "cube.png" plus tard
         player = new PlayerCube(100f, PhysicsConfig.GROUND_Y, 64f);
 
-        // Gestion de l'entrée : espace pour sauter
-        Gdx.input.setInputProcessor(new InputAdapter() {
-            @Override
-            public boolean keyDown(int keycode) {
-                if (keycode == Input.Keys.SPACE) {
-                    player.jump();
-                    return true;
-                }
-                return false;
-            }
-        });
+        spikeRect = new Rectangle(
+            600f,
+            PhysicsConfig.GROUND_Y,
+            60f,
+            80f
+        );
     }
 
     @Override
-    public void render () {
+    public void render() {
         float delta = Gdx.graphics.getDeltaTime();
 
-        // mettre à jour la physique du cube
+        // gestion de l'entrée : espace pour sauter
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            player.jump();
+        }
+
+        // physique du joueur
         player.update(delta);
 
-        // effacer l'écran (ici noir)
+        // collision joueur / pique
+        Rectangle playerRect = new Rectangle(
+            player.getX(),
+            player.getY(),
+            player.getWidth(),
+            player.getHeight()
+        );
+        if (playerRect.overlaps(spikeRect)) {
+            resetPlayer();
+        }
+
+        // la caméra suit le joueur en X
+        camera.position.x = player.getX() + player.getWidth() / 2f;
+        camera.update();
+
         ScreenUtils.clear(0, 0, 0, 1);
 
-        // dessiner le cube
+        batch.setProjectionMatrix(camera.combined);
+
         batch.begin();
+
+        // sol simple (bande horizontale)
+        batch.draw(
+            cubeTexture,
+            camera.position.x - Gdx.graphics.getWidth() / 2f,
+            PhysicsConfig.GROUND_Y - 10,
+            Gdx.graphics.getWidth(),
+            10
+        );
+
+        // joueur
         batch.draw(
             cubeTexture,
             player.getX(),
@@ -57,13 +95,26 @@ public class Main extends ApplicationAdapter {
             player.getWidth(),
             player.getHeight()
         );
+
+        // pique
+        batch.draw(
+            cubeTexture,
+            spikeRect.x,
+            spikeRect.y,
+            spikeRect.width,
+            spikeRect.height
+        );
+
         batch.end();
     }
 
+    private void resetPlayer() {
+        player = new PlayerCube(100f, PhysicsConfig.GROUND_Y, 64f);
+    }
+
     @Override
-    public void dispose () {
+    public void dispose() {
         batch.dispose();
         cubeTexture.dispose();
     }
 }
-
