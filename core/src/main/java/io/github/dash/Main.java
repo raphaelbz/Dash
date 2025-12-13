@@ -40,7 +40,7 @@ public class Main extends ApplicationAdapter {
         spikeRect = new Rectangle(
             600f,
             PhysicsConfig.GROUND_Y,
-            60f,
+            80f,
             80f
         );
     }
@@ -82,7 +82,7 @@ public class Main extends ApplicationAdapter {
         batch.draw(
             cubeTexture,
             camera.position.x - Gdx.graphics.getWidth() / 2f,
-            PhysicsConfig.GROUND_Y - 10,
+            PhysicsConfig.GROUND_Y - 5,
             Gdx.graphics.getWidth(),
             10
         );

@@ -6,10 +6,10 @@ public class PhysicsConfig {
     public static final float FORWARD_SPEED = 300f;
 
     // gravité
-    public static final float GRAVITY = -2000f;
+    public static final float GRAVITY = -1000f;
 
     // vitesse verticale initiale quand on saute
-    public static final float JUMP_SPEED = 900f;
+    public static final float JUMP_SPEED = 100f;
 
     // position du sol
     public static final float GROUND_Y = 100f;
