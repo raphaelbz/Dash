@@ -33,7 +33,7 @@ public class MainMenuScreen extends ScreenAdapter {
         game.batch.end();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-             game.setScreen(new GameScreen(game, "maps/level1.tmx"));
+             game.setScreen(new GameScreen(game, "maps/Carte_geometry_dash.tmx"));
         }
     }
 

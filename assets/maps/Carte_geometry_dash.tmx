@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="left-up" width="300" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="3" nextobjectid="57">
+ <properties>
+  <property name="gravity" type="float" value="-1600"/>
+  <property name="levelName" value="Level 1 Extended"/>
+  <property name="scrollSpeed" type="float" value="35"/>
+ </properties>
  <tileset firstgid="1" source="geometry_tiles.tsx"/>
  <layer id="1" name="Terrain" width="300" height="15">
   <data encoding="csv">

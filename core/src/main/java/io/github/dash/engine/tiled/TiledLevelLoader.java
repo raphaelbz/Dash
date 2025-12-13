@@ -49,6 +49,10 @@ public class TiledLevelLoader {
 
         // Load objects
         MapLayer objectLayer = map.getLayers().get("Objects");
+        if (objectLayer == null) {
+            objectLayer = map.getLayers().get("Objets");
+        }
+
         if (objectLayer != null) {
             for (MapObject obj : objectLayer.getObjects()) {
                 MapProperties objProps = obj.getProperties();
@@ -58,14 +62,14 @@ public class TiledLevelLoader {
                 float h = objProps.get("height", 32f, Float.class);
                 String type = objProps.get("type", "", String.class);
 
-                if ("PlayerStart".equals(type)) {
+                if ("PlayerStart".equals(type) || "spawn".equals(type)) {
                     level.setPlayer(EntityFactory.createPlayer(x, y, w, h));
                     level.addEntity(level.getPlayer());
-                } else if ("Spike".equals(type)) {
+                } else if ("Spike".equals(type) || "kill".equals(type)) {
                     level.addEntity(EntityFactory.createSpike(x, y, w, h));
                 } else if ("Solid".equals(type)) {
                     level.addEntity(EntityFactory.createSolid(x, y, w, h));
-                } else if ("EndFlag".equals(type)) {
+                } else if ("EndFlag".equals(type) || "finish".equals(type)) {
                     level.addEntity(EntityFactory.createEndFlag(x, y, w, h));
                 }
             }
