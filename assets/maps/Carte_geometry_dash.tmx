@@ -26,10 +26,11 @@
 </data>
  </layer>
  <objectgroup id="2" name="Objets">
-  <object id="3" type="spawn" x="2" y="414" width="46" height="30"/>
+  <object id="3" type="spawn" x="-50" y="414" width="46" height="30"/>
+  <object id="2" name="Ground" type="Solid" x="0" y="448" width="16000" height="32"/>
   <object id="7" type="kill" x="198" y="413" width="43" height="35"/>
-  <object id="10" type="kill" x="621" y="410" width="30" height="40"/>
-  <object id="11" type="kill" x="1039" y="414" width="29" height="33"/>
+
+
   <object id="13" type="kill" x="1322" y="414" width="40" height="33"/>
   <object id="14" type="kill" x="1455" y="413" width="27" height="33"/>
   <object id="19" type="kill" x="1808" y="410" width="27" height="38"/>
