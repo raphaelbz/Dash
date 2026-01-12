@@ -3,7 +3,7 @@
 > **L'aventure arcade ultime qui teste vos réflexes !**  
 > *Propulsé par [LibGDX](https://libgdx.com/) & Java* ☕
 
-![Badge](https://img.shields.io/badge/Status-Playable-brightgreen?style=for-the-badge) ![Badge](https://img.shields.io/badge/Fun-Infinite-ff69b4?style=for-the-badge) ![Badge](https://img.shields.io/badge/Vibe-Retro-blueviolet?style=for-the-badge)
+![Badge](https://img.shields.io/badge/Status-Playable-brightgreen?style=for-the-badge) ![Badge](https://img.shields.io/badge/Fun-Infinite-ff69b4?style=for-the-badge) ![Badge](https://img.shields.io/badge/Vibe-Retro-blueviolet?style=for-the-badge) [![GitHub](https://img.shields.io/badge/GitHub-Repo-181717?style=for-the-badge&logo=github)](https://github.com/raphaelbz/Dash)
 
 ---
 
