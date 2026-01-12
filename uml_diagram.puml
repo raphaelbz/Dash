@@ -1,0 +1,365 @@
+@startuml Dash_Game_UML
+' ============================================
+' COMPACT CONFIGURATION
+' ============================================
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype polyline
+skinparam nodesep 30
+skinparam ranksep 30
+skinparam padding 2
+skinparam defaultFontSize 10
+skinparam classFontSize 11
+skinparam packageFontSize 12
+scale 0.85
+
+skinparam class {
+    BackgroundColor<<abstract>> #E8E8FF
+    BackgroundColor<<enum>> #FFFFCC
+    BackgroundColor #FFFFFF
+    BorderColor #333333
+}
+
+hide empty members
+
+' ============================================
+' LIBGDX (Simplified)
+' ============================================
+package "com.badlogic.gdx" as gdx <<External>> #DDD {
+    abstract class Game
+    abstract class ScreenAdapter
+    abstract class InputAdapter
+    class SpriteBatch
+    class ShapeRenderer
+    class OrthographicCamera
+    class TiledMap
+}
+
+' ============================================
+' LAUNCHER
+' ============================================
+package "lwjgl3" #E0FFE0 {
+    class Lwjgl3Launcher {
+        +{static} main(String[])
+    }
+}
+
+' ============================================
+' GAME SCREENS
+' ============================================
+package "game" #FFE0E0 {
+    class GeometryDashGame {
+        +batch: SpriteBatch
+        --
+        +create()
+        +render()
+        +dispose()
+    }
+
+    class MainMenuScreen {
+        -game: GeometryDashGame
+        -selectedOption: int
+        -menuOptions: String[]
+        --
+        +show()
+        +render(delta)
+        -handleInput()
+        -selectOption()
+        +dispose()
+    }
+
+    class LevelSelectScreen {
+        -game: GeometryDashGame
+        -selectedLevel: int
+        -{static}LEVELS: String[][]
+        --
+        +show()
+        +render(delta)
+        -handleInput()
+        -startLevel()
+        +dispose()
+    }
+
+    class GameScreen {
+        -game: GeometryDashGame
+        -levelPath: String
+        -gameWorld: GameWorld
+        -gameController: GameController
+        -worldRenderer: WorldRenderer
+        -camera: OrthographicCamera
+        -{static}DEATH_DELAY: float
+        -{static}VICTORY_DELAY: float
+        --
+        +show()
+        +render(delta)
+        -renderHUD()
+        -renderDeathScreen(delta)
+        -renderVictoryScreen(delta)
+        +dispose()
+    }
+}
+
+' ============================================
+' MODEL
+' ============================================
+package "engine.model" #E0E0FF {
+    abstract class Entity <<abstract>> {
+        #x, y: float
+        #width, height: float
+        --
+        +update(delta)
+        +getBounds(): Rectangle
+        +getX/Y/Width/Height()
+        +setX/Y()
+    }
+
+    abstract class DynamicEntity <<abstract>> {
+        #vx, vy: float
+        --
+        +updatePhysics(delta, gravity)
+        +setVelocity(vx, vy)
+        +getVy() / setVy()
+    }
+
+    class Player {
+        -alive: boolean
+        -onGround: boolean
+        -{static}FALL_GRAVITY_MULT: float
+        -{static}MAX_FALL_SPEED: float
+        -onJumpCallback: Runnable
+        --
+        +jump(jumpForce)
+        +updatePhysics(delta, gravity)
+        +kill()
+        +isAlive(): boolean
+        +setOnGround(boolean)
+        +isOnGround(): boolean
+    }
+
+    class Obstacle {
+        -type: ObstacleType
+        --
+        +getType(): ObstacleType
+    }
+
+    enum ObstacleType <<enum>> {
+        SOLID
+        KILLER
+    }
+
+    class EndFlag
+
+    class Level {
+        -entities: List<Entity>
+        -player: Player
+        -scrollSpeed: float
+        -gravity: float
+        -levelName: String
+        --
+        +addEntity(Entity)
+        +getEntities(): List
+        +getPlayer(): Player
+        +get/setScrollSpeed()
+        +get/setGravity()
+        +get/setLevelName()
+    }
+
+    class GameWorld {
+        -currentLevel: Level
+        -levelCompleted: boolean
+        -playerDead: boolean
+        -deathYThreshold: float
+        --
+        +update(delta)
+        -handleCollisions(Player)
+        -resolveSolidCollision(...)
+        +isLevelCompleted(): boolean
+        +isPlayerDead(): boolean
+        +getCurrentLevel(): Level
+    }
+}
+
+' ============================================
+' CONTROLLER
+' ============================================
+package "engine.controller" #FFFFE0 {
+    class InputController {
+        -player: Player
+        -jumpForce: float
+        -jumpSound: Sound
+        --
+        +keyDown(keycode): boolean
+        +touchDown(...): boolean
+        +dispose()
+    }
+
+    class GameController {
+        -gameWorld: GameWorld
+        -inputController: InputController
+        -camera: OrthographicCamera
+        -{static}SPEED_MULT: float
+        --
+        +update(delta)
+        +getGameWorld(): GameWorld
+        +dispose()
+    }
+
+    class LevelManager {
+        -loader: TiledLevelLoader
+        --
+        +loadLevel(path): LoadedLevel
+    }
+}
+
+' ============================================
+' VIEW
+' ============================================
+package "engine.view" #E0FFFF {
+    class WorldRenderer {
+        -gameWorld: GameWorld
+        -camera: OrthographicCamera
+        -batch: SpriteBatch
+        -tiledMap: TiledMap
+        -tiledMapRenderer
+        -shapeRenderer: ShapeRenderer
+        --
+        +render()
+        +dispose()
+    }
+}
+
+' ============================================
+' TILED / FACTORY
+' ============================================
+package "engine.tiled" #FFE0FF {
+    class EntityFactory <<Factory>> {
+        +{static}createPlayer(x,y,w,h): Player
+        +{static}createSolid(x,y,w,h): Obstacle
+        +{static}createSpike(x,y,w,h): Obstacle
+        +{static}createEndFlag(x,y,w,h): EndFlag
+    }
+
+    class TiledLevelLoader {
+        +load(tmxPath): LoadedLevel
+        -parseTileLayers(...)
+        -parseObjectLayers(...)
+        -findGroundHeight(...)
+        -createFallbackLevel()
+    }
+
+    class LoadedLevel <<Data>> {
+        +level: Level
+        +map: TiledMap
+    }
+}
+
+' ============================================
+' UTILITY / LEGACY
+' ============================================
+package "utility" #F0F0F0 {
+    class PhysicsConfig <<Utility>> {
+        +{static}FORWARD_SPEED: float
+        +{static}GRAVITY: float
+        +{static}JUMP_SPEED: float
+        +{static}GROUND_Y: float
+        +{static}MAX_FALL_SPEED: float
+    }
+
+    class PlayerCube <<Legacy>> {
+        -x, y, width, height: float
+        -vx, vy: float
+        -onGround: boolean
+        --
+        +update(delta)
+        +jump()
+    }
+
+    class Main <<Legacy>> {
+        -batch: SpriteBatch
+        -player: PlayerCube
+        --
+        +create()
+        +render()
+    }
+}
+
+' ============================================
+' INHERITANCE
+' ============================================
+Game <|-- GeometryDashGame
+ScreenAdapter <|-- MainMenuScreen
+ScreenAdapter <|-- LevelSelectScreen
+ScreenAdapter <|-- GameScreen
+InputAdapter <|-- InputController
+
+Entity <|-- DynamicEntity
+DynamicEntity <|-- Player
+Entity <|-- Obstacle
+Entity <|-- EndFlag
+
+' ============================================
+' ASSOCIATIONS
+' ============================================
+' Game flow
+Lwjgl3Launcher ..> GeometryDashGame : creates
+GeometryDashGame *-- SpriteBatch
+GeometryDashGame ..> MainMenuScreen
+MainMenuScreen o-- GeometryDashGame
+MainMenuScreen ..> LevelSelectScreen
+LevelSelectScreen o-- GeometryDashGame
+LevelSelectScreen ..> GameScreen
+GameScreen o-- GeometryDashGame
+GameScreen *-- GameWorld
+GameScreen *-- GameController
+GameScreen *-- WorldRenderer
+GameScreen ..> LevelManager
+
+' Model
+Level o-- "*" Entity
+Level o-- Player
+GameWorld *-- Level
+Obstacle *-- ObstacleType
+
+' Controller
+GameController *-- InputController
+GameController o-- GameWorld
+InputController o-- Player
+LevelManager *-- TiledLevelLoader
+
+' View
+WorldRenderer o-- GameWorld
+WorldRenderer o-- TiledMap
+
+' Tiled
+TiledLevelLoader ..> EntityFactory : uses
+TiledLevelLoader ..> LoadedLevel : creates
+LoadedLevel o-- Level
+LoadedLevel o-- TiledMap
+EntityFactory ..> Player : creates
+EntityFactory ..> Obstacle : creates
+EntityFactory ..> EndFlag : creates
+
+' Legacy
+Main ..> PlayerCube
+
+' ============================================
+' NOTES
+' ============================================
+note "Factory Pattern" as N1
+EntityFactory .. N1
+
+note "MVC Pattern" as N2
+GameWorld .. N2
+WorldRenderer .. N2
+GameController .. N2
+
+legend right
+|= |= Architecture MVC |
+| Model | engine.model |
+| View | engine.view |
+| Controller | engine.controller |
+endlegend
+
+title **Dash Game - UML Class Diagram**
+
+@enduml
