@@ -1,33 +1,49 @@
 # Dash
 
-A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
+Un hommage à **Geometry Dash** réalisé en Java avec [libGDX](https://libgdx.com/). Courez, sautez, évitez les obstacles et terminez chaque niveau le plus proprement possible grâce à des menus animés, un suivi de progression et plusieurs cartes réalisées sous Tiled.
 
-This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.
+## Fonctionnalités
+- Menu principal et sélection de niveaux animés.
+- 3 niveaux jouables (`mapRaf`, `mapMel`, `mapRoy`) chargés depuis des cartes **.tmx**.
+- HUD avec pourcentage de progression, écrans de mort/victoire et redémarrage automatique du niveau.
+- Contrôles clavier **et** souris, avec retour sonore sur le saut.
+- Architecture libGDX classique : module `core` pour la logique, `lwjgl3` pour le lancement desktop.
 
-## Platforms
+## Contrôles
+**Menus**
+- Haut/Bas : naviguer dans le menu principal
+- Gauche/Droite : choisir un niveau
+- Entrée ou Espace : valider
+- Échap : retour ou quitter
 
-- `core`: Main module with the application logic shared by all platforms.
-- `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
+**En jeu**
+- Espace **ou** clic gauche : sauter
+- Échap : revenir au menu principal
 
-## Gradle
+## Démarrer rapidement
+Prérequis : JDK 21+ et une connexion internet pour le premier téléchargement des dépendances.
 
-This project uses [Gradle](https://gradle.org/) to manage dependencies.
-The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.
-Useful Gradle tasks and flags:
+```bash
+# Lancer le jeu (desktop)
+./gradlew lwjgl3:run
 
-- `--continue`: when using this flag, errors will not stop the tasks from running.
-- `--daemon`: thanks to this flag, Gradle daemon will be used to run chosen tasks.
-- `--offline`: when using this flag, cached dependency archives will be used.
-- `--refresh-dependencies`: this flag forces validation of all dependencies. Useful for snapshot versions.
-- `build`: builds sources and archives of every project.
-- `cleanEclipse`: removes Eclipse project data.
-- `cleanIdea`: removes IntelliJ project data.
-- `clean`: removes `build` folders, which store compiled classes and built archives.
-- `eclipse`: generates Eclipse project data.
-- `idea`: generates IntelliJ project data.
-- `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
-- `lwjgl3:run`: starts the application.
-- `test`: runs unit tests (if any).
+# Générer un JAR exécutable (lwjgl3/build/libs)
+./gradlew lwjgl3:jar
 
-Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
-For example, `core:clean` removes `build` folder only from the `core` project.
+# Lancer les tests éventuels
+./gradlew test
+```
+
+## Structure du projet
+- `core/` : logique de jeu (monde, entités, contrôleurs, rendu).
+- `lwjgl3/` : lanceur desktop.
+- `assets/` : cartes Tiled (`assets/maps/*.tmx`), sons et textures.
+
+## Ajouter ou éditer des niveaux
+1. Ouvrez les cartes `.tmx` existantes dans Tiled (dossier `assets/maps`).
+2. Créez ou modifiez votre propre carte.
+3. Référencez-la dans `LevelSelectScreen` pour qu’elle apparaisse dans le menu de sélection.
+
+## Ressources
+- [libGDX](https://libgdx.com/)
+- Projet initial généré avec [gdx-liftoff](https://github.com/libgdx/gdx-liftoff)
