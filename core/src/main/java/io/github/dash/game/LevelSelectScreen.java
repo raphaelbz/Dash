@@ -26,8 +26,9 @@ public class LevelSelectScreen extends ScreenAdapter {
 
     // Niveaux disponibles: nom, chemin, description
     private static final String[][] LEVELS = {
-        {"Niveau 1", "maps/mapraf.tmx", "Niveau assez facile"},
-        {"Niveau 2", "maps/level_long.tmx", "Niveau plus long avec sauts techniques"}
+        {"Niveau 1", "maps/mapRaf.tmx", "Niveau assez facile"},
+        {"Niveau 2", "maps/mapMel.tmx", "Niveau avec sauts techniques"},
+        {"Niveau 3", "maps/mapRoy.tmx", "Niveau difficile"}
     };
 
     // Couleurs de fond
