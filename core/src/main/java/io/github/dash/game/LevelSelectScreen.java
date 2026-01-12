@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 /**
- * Screen for selecting which level to play.
+ * Ecran de selection de niveau.
  */
 public class LevelSelectScreen extends ScreenAdapter {
     private final GeometryDashGame game;
@@ -24,14 +24,13 @@ public class LevelSelectScreen extends ScreenAdapter {
     private int selectedLevel = 0;
     private float animationTime = 0;
 
-    // Level data
+    // Niveaux disponibles: nom, chemin, description
     private static final String[][] LEVELS = {
-        {"Raf's Level", "maps/mapraf.tmx", "Custom level by Raf - test your skills!"},
-        {"Level 1", "maps/Carte_geometry_dash.tmx", "Classic challenge with many obstacles"},
-        {"Stereo Madness", "maps/level1.tmx", "Inspired by GD - rising platforms and tricky spikes"}
+        {"Niveau 1", "maps/mapraf.tmx", "Niveau assez facile"},
+        {"Niveau 2", "maps/level_long.tmx", "Niveau plus long avec sauts techniques"}
     };
 
-    // Colors
+    // Couleurs de fond
     private final Color bgColor1 = new Color(0.02f, 0.08f, 0.15f, 1);
     private final Color bgColor2 = new Color(0.08f, 0.02f, 0.18f, 1);
 
@@ -57,32 +56,26 @@ public class LevelSelectScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         animationTime += delta;
-
         handleInput();
 
-        // Clear screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Draw background
         drawBackground();
-
-        // Draw level cards
         drawLevelCards();
 
-        // Draw text
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
 
-        // Draw title
+        // Titre
         titleFont.setColor(Color.CYAN);
         String title = "SELECT LEVEL";
         glyphLayout.setText(titleFont, title);
         titleFont.draw(game.batch, title, (1280 - glyphLayout.width) / 2, 650);
 
-        // Draw level info on each card
+        // Cartes de niveau
         float cardWidth = 350;
-        float cardSpacing = 50;
+        float cardSpacing = 100;
         float totalWidth = LEVELS.length * cardWidth + (LEVELS.length - 1) * cardSpacing;
         float startX = (1280 - totalWidth) / 2;
 
@@ -90,7 +83,7 @@ public class LevelSelectScreen extends ScreenAdapter {
             float cardX = startX + i * (cardWidth + cardSpacing);
             float cardCenterX = cardX + cardWidth / 2;
 
-            // Level name
+            // Nom du niveau
             if (i == selectedLevel) {
                 menuFont.setColor(1f, 0.9f, 0.3f, 1f);
             } else {
@@ -111,10 +104,10 @@ public class LevelSelectScreen extends ScreenAdapter {
             menuFont.draw(game.batch, LEVELS[i][2], cardCenterX - glyphLayout.width / 2, 320);
         }
 
-        // Draw instructions
+        // Instructions
         menuFont.getData().setScale(1.2f);
         menuFont.setColor(0.4f, 0.4f, 0.4f, 1f);
-        String instructions = "LEFT/RIGHT to select - ENTER to play - ESC to go back";
+        String instructions = "GAUCHE/DROITE pour choisir - ENTREE pour jouer - ESC pour retour";
         glyphLayout.setText(menuFont, instructions);
         menuFont.draw(game.batch, instructions, (1280 - glyphLayout.width) / 2, 100);
 
@@ -129,26 +122,21 @@ public class LevelSelectScreen extends ScreenAdapter {
             selectedLevel = (selectedLevel + 1) % LEVELS.length;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            startLevel();
+            game.setScreen(new GameScreen(game, LEVELS[selectedLevel][1]));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new MainMenuScreen(game));
         }
     }
 
-    private void startLevel() {
-        String levelPath = LEVELS[selectedLevel][1];
-        game.setScreen(new GameScreen(game, levelPath));
-    }
-
     private void drawBackground() {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        // Gradient background
+        // Fond degrade
         shapeRenderer.rect(0, 0, 1280, 720, bgColor1, bgColor1, bgColor2, bgColor2);
 
-        // Animated particles
+        // Particules animees
         shapeRenderer.setColor(0.2f, 0.2f, 0.4f, 0.3f);
         for (int i = 0; i < 20; i++) {
             float x = (i * 70 + animationTime * 20) % 1400 - 60;
@@ -166,7 +154,7 @@ public class LevelSelectScreen extends ScreenAdapter {
 
         float cardWidth = 350;
         float cardHeight = 250;
-        float cardSpacing = 50;
+        float cardSpacing = 100;
         float totalWidth = LEVELS.length * cardWidth + (LEVELS.length - 1) * cardSpacing;
         float startX = (1280 - totalWidth) / 2;
         float cardY = 250;
@@ -174,18 +162,15 @@ public class LevelSelectScreen extends ScreenAdapter {
         for (int i = 0; i < LEVELS.length; i++) {
             float cardX = startX + i * (cardWidth + cardSpacing);
 
-            // Card background
+            // Effet de selection
             if (i == selectedLevel) {
-                // Selected card - brighter with animation
                 float pulse = (float) (Math.sin(animationTime * 4) * 0.05 + 0.25);
                 shapeRenderer.setColor(pulse, pulse * 0.8f, pulse * 1.5f, 1f);
-
-                // Draw selection glow
                 shapeRenderer.setColor(0.3f, 0.5f, 0.8f, 0.3f);
                 shapeRenderer.rect(cardX - 5, cardY - 5, cardWidth + 10, cardHeight + 10);
             }
 
-            // Card body
+            // Corps de la carte
             if (i == selectedLevel) {
                 shapeRenderer.setColor(0.15f, 0.15f, 0.25f, 1f);
             } else {
@@ -193,18 +178,14 @@ public class LevelSelectScreen extends ScreenAdapter {
             }
             shapeRenderer.rect(cardX, cardY, cardWidth, cardHeight);
 
-            // Card border
+            // Bordure
             shapeRenderer.setColor(i == selectedLevel ? new Color(0.4f, 0.6f, 1f, 1f) : new Color(0.2f, 0.2f, 0.3f, 1f));
-            // Top
             shapeRenderer.rect(cardX, cardY + cardHeight - 3, cardWidth, 3);
-            // Bottom
             shapeRenderer.rect(cardX, cardY, cardWidth, 3);
-            // Left
             shapeRenderer.rect(cardX, cardY, 3, cardHeight);
-            // Right
             shapeRenderer.rect(cardX + cardWidth - 3, cardY, 3, cardHeight);
 
-            // Preview area (placeholder geometric pattern)
+            // Zone de preview
             float previewX = cardX + 25;
             float previewY = cardY + 70;
             float previewWidth = cardWidth - 50;
@@ -213,13 +194,12 @@ public class LevelSelectScreen extends ScreenAdapter {
             shapeRenderer.setColor(0.05f, 0.05f, 0.1f, 1f);
             shapeRenderer.rect(previewX, previewY, previewWidth, previewHeight);
 
-            // Draw mini level preview (abstract representation)
+            // Mini preview
             if (i == selectedLevel) {
                 shapeRenderer.setColor(0.3f, 0.3f, 0.4f, 1f);
             } else {
                 shapeRenderer.setColor(0.15f, 0.15f, 0.2f, 1f);
             }
-            // Ground
             shapeRenderer.rect(previewX, previewY, previewWidth, 15);
 
             // Mini obstacles
@@ -229,7 +209,7 @@ public class LevelSelectScreen extends ScreenAdapter {
                 shapeRenderer.triangle(obstX, previewY + 15, obstX + 10, previewY + 35, obstX + 20, previewY + 15);
             }
 
-            // Mini player
+            // Mini joueur
             shapeRenderer.setColor(i == selectedLevel ? Color.YELLOW : new Color(0.5f, 0.5f, 0.3f, 1f));
             shapeRenderer.rect(previewX + 10, previewY + 15, 15, 15);
         }

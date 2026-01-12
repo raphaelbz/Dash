@@ -1,13 +1,10 @@
 package io.github.dash.engine.model;
 
 /**
- * Represents an obstacle in the game.
+ * Obstacle: solide ou mortel.
  */
 public class Obstacle extends Entity {
-    public enum ObstacleType {
-        SOLID,
-        KILLER
-    }
+    public enum ObstacleType { SOLID, KILLER }
 
     private final ObstacleType type;
 
@@ -16,7 +13,5 @@ public class Obstacle extends Entity {
         this.type = type;
     }
 
-    public ObstacleType getType() {
-        return type;
-    }
+    public ObstacleType getType() { return type; }
 }

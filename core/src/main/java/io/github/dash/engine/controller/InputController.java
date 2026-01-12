@@ -7,33 +7,31 @@ import com.badlogic.gdx.audio.Sound;
 import io.github.dash.engine.model.Player;
 
 /**
- * Handles user input and jump sound.
+ * Gestion des entrees utilisateur.
  */
 public class InputController extends InputAdapter {
     private final Player player;
-    private final float jumpForce = 1600f;
+    private final float jumpForce = 2500f;
     private Sound jumpSound;
 
     public InputController(Player player) {
         this.player = player;
         loadJumpSound();
-
-        // Set up jump callback for sound
-        player.setOnJumpCallback(() -> playJumpSound());
+        player.setOnJumpCallback(this::playJumpSound);
     }
 
     private void loadJumpSound() {
         try {
             jumpSound = Gdx.audio.newSound(Gdx.files.internal("sounds/jump.wav"));
         } catch (Exception e) {
-            Gdx.app.log("InputController", "Could not load jump sound: " + e.getMessage());
+            Gdx.app.log("InputController", "Son de saut non charge: " + e.getMessage());
             jumpSound = null;
         }
     }
 
     private void playJumpSound() {
         if (jumpSound != null) {
-            jumpSound.play(0.5f);  // Volume at 50%
+            jumpSound.play(0.5f);
         }
     }
 
@@ -56,8 +54,6 @@ public class InputController extends InputAdapter {
     }
 
     public void dispose() {
-        if (jumpSound != null) {
-            jumpSound.dispose();
-        }
+        if (jumpSound != null) jumpSound.dispose();
     }
 }

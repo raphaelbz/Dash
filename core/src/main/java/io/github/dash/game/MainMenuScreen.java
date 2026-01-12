@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 /**
- * The main menu screen with polished visuals and navigation.
+ * Menu principal.
  */
 public class MainMenuScreen extends ScreenAdapter {
     private final GeometryDashGame game;
@@ -22,10 +22,9 @@ public class MainMenuScreen extends ScreenAdapter {
     private GlyphLayout glyphLayout;
 
     private int selectedOption = 0;
-    private final String[] menuOptions = {"PLAY", "EXIT"};
+    private final String[] menuOptions = {"JOUER", "QUITTER"};
     private float animationTime = 0;
 
-    // Colors for the gradient background
     private final Color bgColor1 = new Color(0.05f, 0.05f, 0.15f, 1);
     private final Color bgColor2 = new Color(0.1f, 0.05f, 0.2f, 1);
 
@@ -52,46 +51,37 @@ public class MainMenuScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         animationTime += delta;
-
-        // Handle input
         handleInput();
 
-        // Clear screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Draw background gradient
         drawBackground();
-
-        // Draw decorative elements
         drawDecorations();
 
-        // Draw title and menu
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
 
-        // Draw title with glow effect
+        // Titre
         String title = "GEOMETRY DASH";
         glyphLayout.setText(titleFont, title);
         float titleX = (1280 - glyphLayout.width) / 2;
         float titleY = 550;
 
-        // Pulsing color effect
         float pulse = (float) (Math.sin(animationTime * 3) * 0.3 + 0.7);
         titleFont.setColor(pulse, 1f, 1f, 1f);
         titleFont.draw(game.batch, title, titleX, titleY);
 
-        // Draw subtitle
+        // Sous-titre
         menuFont.setColor(0.7f, 0.7f, 0.7f, 1f);
-        String subtitle = "Claude Edition";
+        String subtitle = "Raf Edition";
         glyphLayout.setText(menuFont, subtitle);
         menuFont.draw(game.batch, subtitle, (1280 - glyphLayout.width) / 2, titleY - 60);
 
-        // Draw menu options
+        // Options du menu
         float menuStartY = 350;
         for (int i = 0; i < menuOptions.length; i++) {
             if (i == selectedOption) {
-                // Selected option - animate and highlight
                 float bounce = (float) Math.sin(animationTime * 5) * 5;
                 menuFont.setColor(1f, 0.8f, 0f, 1f);
                 glyphLayout.setText(menuFont, "> " + menuOptions[i] + " <");
@@ -105,10 +95,10 @@ public class MainMenuScreen extends ScreenAdapter {
             }
         }
 
-        // Draw controls hint
+        // Instructions
         menuFont.getData().setScale(1f);
         menuFont.setColor(0.4f, 0.4f, 0.4f, 1f);
-        String controls = "UP/DOWN to select - ENTER to confirm - SPACE to jump in game";
+        String controls = "HAUT/BAS pour choisir - ENTREE pour confirmer - ESPACE pour sauter en jeu";
         glyphLayout.setText(menuFont, controls);
         menuFont.draw(game.batch, controls, (1280 - glyphLayout.width) / 2, 80);
         menuFont.getData().setScale(2f);
@@ -130,10 +120,10 @@ public class MainMenuScreen extends ScreenAdapter {
 
     private void selectOption() {
         switch (selectedOption) {
-            case 0: // PLAY - Go directly to mapRaf level
-                game.setScreen(new GameScreen(game, "maps/mapraf.tmx"));
+            case 0:
+                game.setScreen(new LevelSelectScreen(game));
                 break;
-            case 1: // EXIT
+            case 1:
                 Gdx.app.exit();
                 break;
         }
@@ -142,10 +132,7 @@ public class MainMenuScreen extends ScreenAdapter {
     private void drawBackground() {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
-        // Gradient background
         shapeRenderer.rect(0, 0, 1280, 720, bgColor1, bgColor1, bgColor2, bgColor2);
-
         shapeRenderer.end();
     }
 
@@ -153,26 +140,24 @@ public class MainMenuScreen extends ScreenAdapter {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        // Draw animated floating squares (like Geometry Dash)
+        // Carres flottants
         for (int i = 0; i < 15; i++) {
             float x = (i * 100 + animationTime * 30) % 1400 - 60;
             float y = (float) (Math.sin(animationTime + i) * 50 + 150 + i * 30);
             float size = 20 + i % 3 * 10;
             float alpha = 0.1f + (i % 5) * 0.02f;
-
             shapeRenderer.setColor(0.3f, 0.3f, 0.5f, alpha);
             shapeRenderer.rect(x, y, size, size);
         }
 
-        // Draw ground line
+        // Ligne de sol
         shapeRenderer.setColor(0.3f, 0.3f, 0.4f, 1f);
         shapeRenderer.rect(0, 0, 1280, 3);
 
-        // Draw some geometric patterns at the bottom
+        // Motifs geometriques
         shapeRenderer.setColor(0.2f, 0.2f, 0.3f, 0.5f);
         for (int i = 0; i < 40; i++) {
-            float x = i * 32;
-            shapeRenderer.rect(x, 3, 30, 30);
+            shapeRenderer.rect(i * 32, 3, 30, 30);
         }
 
         shapeRenderer.end();
