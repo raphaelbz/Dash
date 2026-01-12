@@ -1,70 +1,58 @@
-# ⚡ DASH ⚡
+# Dash
 
-> **L'aventure arcade ultime qui teste vos réflexes !**  
-> *Propulsé par [LibGDX](https://libgdx.com/) & Java* ☕
+> Un jeu de plateforme arcade développé avec [LibGDX](https://libgdx.com/).
 
-![Badge](https://img.shields.io/badge/Status-Playable-brightgreen?style=for-the-badge) [![GitHub](https://img.shields.io/badge/GitHub-Repo-181717?style=for-the-badge&logo=github)](https://github.com/raphaelbz/Dash)
+[![Status](https://img.shields.io/badge/Status-Playable-brightgreen)](https://github.com/raphaelbz/Dash) [![GitHub](https://img.shields.io/badge/GitHub-Repo-181717?logo=github)](https://github.com/raphaelbz/Dash)
 
----
+## 📖 Description
 
-## 🎮 C'est quoi DASH ?
+**Dash** est un jeu de type "runner" où le joueur doit éviter des obstacles et survivre le plus longtemps possible. Le projet met en avant l'utilisation du framework LibGDX ainsi qu'une architecture modulaire facilitant l'extension du jeu (nouveaux niveaux, mécaniques, etc.).
 
-**DASH** n'est pas juste un jeu, c'est un défouloir. Inspiré par les classiques du "die and retry", votre mission est simple : **Survivre**.
-Courez, sautez, et esquivez les obstacles dans des niveaux méticuleusement conçus à la main.
-
-### ✨ Pourquoi vous allez kiffer :
-*   🎨 **Graphismes Pixel Perfect** : Une esthétique rétro qui caresse la rétine.
-*   🔥 **Gameplay "One-Tap"** : Facile à apprendre, impossible à lâcher.
-*   🗺️ **Niveaux Tiled** : Des cartes complexes chargées dynamiquement pour une expérience toujours renouvelée.
-*   🚀 **Performance Absolue** : Grâce à la puissance de LWJGL3, c'est fluide comme de l'eau.
+### Fonctionnalités principales
+*   **Moteur de jeu** : Basé sur LibGDX pour une compatibilité multiplateforme et de hautes performances.
+*   **Gestion des niveaux** : Utilisation de [Tiled](https://www.mapeditor.org/) pour la création et le chargement dynamique des cartes (.tmx).
+*   **Architecture** : Code structuré séparant la logique de jeu, le rendu et les entrées utilisateur.
 
 ---
 
-## 🕹️ Contrôles
+## 🎮 Commandes
 
-Le minimalisme est la clé de la victoire.
-
-| Action | Commande |
+| Action | Touche / Contrôle |
 | :--- | :--- |
-| **SAUTER** 🦘 | `ESPACE` ou `CLIC GAUCHE` |
-| **RAGE QUIT** 🤬 | `ALT + F4` (Non recommandé, mais compréhensible) |
-
-> **Pro Tip :** Le timing est tout. Ne sautez pas trop tôt... ni trop tard !
+| **Sauter** | `Espace` ou `Clic Gauche` |
+| **Quitter** | `Alt + F4` |
 
 ---
 
-## 🚀 Lancer le jeu
+## 🚀 Installation et Lancement
 
-Prêt à relever le défi ? C'est parti !
+Ce projet utilise **Gradle** pour la gestion des dépendances et la compilation.
 
 ### Prérequis
-*   Un ordinateur (Windows, Mac, ou Linux) 💻
-*   Java JDK 17 ou supérieur ☕
+*   JDK 17 ou version supérieure.
 
-### 🏁 Start
+### Lancer le jeu
 
-Ouvrez votre terminal favori et lancez la fusée :
+Ouvrez un terminal à la racine du projet et exécutez la commande suivante :
 
-**Sur Windows :**
+**Sous Windows :**
 ```powershell
 .\gradlew.bat lwjgl3:run
 ```
 
-**Sur Linux / macOS :**
+**Sous macOS / Linux :**
 ```bash
 ./gradlew lwjgl3:run
 ```
 
 ---
 
-## 🛠️ Sous le capot
+## 🛠️ Structure du Projet
 
-Ce projet est une démonstration de force utilisant :
-*   **LibGDX** : Le framework Java de référence.
-*   **Tiled** : Pour un level design aux petits oignons.
-*   **Gradle** : Pour que tout compile sans douleur.
+*   `core/` : Contient toute la logique du jeu (indépendant de la plateforme).
+*   `lwjgl3/` : Launcher pour la version Desktop (Windows, Mac, Linux).
+*   `assets/` : Ressources graphiques et sonores.
 
 ---
 
-Made with ❤️ and code. 
-*Bonne chance, vous en aurez besoin !* 😉
+*Développé par [Votre Nom/Équipe].*
