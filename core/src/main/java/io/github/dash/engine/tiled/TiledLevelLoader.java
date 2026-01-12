@@ -48,7 +48,7 @@ public class TiledLevelLoader {
 
         level.setScrollSpeed(props.get("scrollSpeed", 350.0f, Float.class));
         level.setGravity(props.get("gravity", -3500.0f, Float.class));
-        level.setLevelName(props.get("levelName", "Unknown", String.class));
+        level.setLevelName(props.get("levelName", "Niveau", String.class));
 
         int tileWidth = props.get("tilewidth", 32, Integer.class);
         int tileHeight = props.get("tileheight", 32, Integer.class);
