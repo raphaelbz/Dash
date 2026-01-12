@@ -52,7 +52,3 @@ Ouvrez un terminal à la racine du projet et exécutez la commande suivante :
 *   `core/` : Contient toute la logique du jeu (indépendant de la plateforme).
 *   `lwjgl3/` : Launcher pour la version Desktop (Windows, Mac, Linux).
 *   `assets/` : Ressources graphiques et sonores.
-
----
-
-*Développé par [Votre Nom/Équipe].*
